@@ -19,3 +19,9 @@
 let numbers = [ "12", "846", "2", "1236" ];
 
 // YOUR CODE GOES HERE
+
+const padLeft = require('./padLeft.js');
+numbers.forEach(number => {
+  const result = padLeft(number, 5, " ");
+  console.log(result);
+});

@@ -9,3 +9,18 @@ function padLeft(val, num, str) {
 }
 
 // YOUR CODE GOES HERE
+
+// Function returns a string that is a combination of `val` character and `str`.
+// `num` specifies the length of the string. But max length is 5.
+// `str` is a string that inserted into the final string and aligned to the right.
+// `val` is a placeholder character, that fills empty characters that not occupied with `str`
+
+// EXAMPLES
+
+// padLeft('foo', 5, '_') -> '__foo'
+// Steps: '00000' -> '_____' -> '__' -> '__foo'
+
+// padLeft(  '2', 2, '0')   -> '02'
+// Steps: '00000' -> '00000' -> '0' -> '02'
+
+module.exports = padLeft;

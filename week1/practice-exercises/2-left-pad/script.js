@@ -11,3 +11,9 @@
 let numbers = [ "12", "846", "2", "1236" ];
 
 // YOUR CODE GOES HERE
+
+const leftPad = require('left-pad');
+numbers.forEach(number => {
+  const result = leftPad(number, 8, " ");
+  console.log(result);
+});
