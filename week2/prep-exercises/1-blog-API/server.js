@@ -48,6 +48,21 @@ app.put("/posts/:title", (req, res) => {
   res.end("ok");
 });
 
+app.delete("/blogs/:title", (req, res) => {
+  // How to get the title from the url parameters?
+  const title = req.params.title;
+  const path = `./blogs/${title}.txt`;
+
+  if (!fs.existsSync(path))
+    return res.status(400).send({
+      status: 400,
+      error: "This post does not exist!",
+    });
+
+  fs.unlinkSync(path);
+  res.end("ok");
+});
+
 app.listen(PORT, () => {
   console.log("Server is running on port " + PORT);
 });
