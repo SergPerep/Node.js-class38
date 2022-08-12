@@ -40,7 +40,7 @@ app.put("/posts/:title", (req, res) => {
   const { content } = req.body;
   const path = `./blogs/${title}.txt`;
   if (!fs.existsSync(path))
-    return res.send({
+    return res.status(400).send({
       status: 400,
       error: "This post does not exist!",
     });
