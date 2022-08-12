@@ -12,6 +12,13 @@ app.get("/", function (req, res) {
   res.send("Hello World");
 });
 
+app.get("/blogs", (req, res) => {
+  const posts = fs.readdirSync("./blogs").map(file => ({
+    title: file.replace(/.txt$/, "") // remove .txt in the name of the file
+  }));
+  res.send(posts);
+});
+
 app.post("/blogs", (req, res) => {
   try {
     const { title, content } = req.body;
@@ -64,17 +71,18 @@ app.delete("/blogs/:title", (req, res) => {
 });
 
 app.get("/blogs/:title", (req, res) => {
-    const title = req.params.title;
-    const path = `./blogs/${title}.txt`;
-    
-    if (!fs.existsSync(path)) return res.status(400).send({
+  const title = req.params.title;
+  const path = `./blogs/${title}.txt`;
+
+  if (!fs.existsSync(path))
+    return res.status(400).send({
       status: 400,
-      error: "This post does not exist!"
+      error: "This post does not exist!",
     });
-    
-    const content = fs.readFileSync(path);
-    res.send(content);
-})
+
+  const content = fs.readFileSync(path);
+  res.send(content);
+});
 
 app.listen(PORT, () => {
   console.log("Server is running on port " + PORT);
