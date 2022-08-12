@@ -63,6 +63,19 @@ app.delete("/blogs/:title", (req, res) => {
   res.end("ok");
 });
 
+app.get("/blogs/:title", (req, res) => {
+    const title = req.params.title;
+    const path = `./blogs/${title}.txt`;
+    
+    if (!fs.existsSync(path)) return res.status(400).send({
+      status: 400,
+      error: "This post does not exist!"
+    });
+    
+    const content = fs.readFileSync(path);
+    res.send(content);
+})
+
 app.listen(PORT, () => {
   console.log("Server is running on port " + PORT);
 });
