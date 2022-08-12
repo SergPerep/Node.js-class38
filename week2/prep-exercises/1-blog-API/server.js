@@ -2,7 +2,6 @@ const { ok } = require("assert");
 const express = require("express");
 const app = express();
 const fs = require("fs");
-const path = require("path");
 
 const PORT = process.env.PORT || 3000;
 
@@ -16,13 +15,13 @@ app.get("/", function (req, res) {
 app.post("/blogs", (req, res) => {
   try {
     const { title, content } = req.body;
-    const pathToFile = path.join(__dirname, `/blogs/${title}.txt`);
-    if (fs.existsSync(pathToFile))
+    const path = `./blogs/${title}.txt`;
+    if (fs.existsSync(path))
       return res.status(400).send({
         status: 400,
         error: "File already exists",
       });
-    fs.writeFileSync(pathToFile, content);
+    fs.writeFileSync(path, content);
     res.send({
       status: 200,
       message: "Blog post saved",
@@ -39,15 +38,13 @@ app.post("/blogs", (req, res) => {
 app.put("/posts/:title", (req, res) => {
   const title = req.params.title;
   const { content } = req.body;
-  // What if the request does not have a title and/or content?
-  const pathToFile = path.join(__dirname, `/blogs/${title}.txt`);
-  console.log(pathToFile);
-  if (!fs.existsSync(pathToFile))
+  const path = `./blogs/${title}.txt`;
+  if (!fs.existsSync(path))
     return res.send({
       status: 400,
       error: "This post does not exist!",
     });
-  fs.writeFileSync(pathToFile, content);
+  fs.writeFileSync(path, content);
   res.end("ok");
 });
 
