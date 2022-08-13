@@ -33,10 +33,7 @@ app.post("/blogs", (req, res) => {
     throw err;
   }
   fs.writeFileSync(path, content);
-  res.send({
-    status: 200,
-    message: "Blog post saved",
-  });
+  res.send({ message: "Blog post saved" });
 });
 
 app.put("/posts/:title", (req, res) => {
