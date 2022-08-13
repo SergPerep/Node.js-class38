@@ -13,6 +13,8 @@ const handleErrors = (err, req, res, next) => {
   res.status(err.statusCode).json({ error: err.message });
 };
 
+const genPath = title => `./blogs/${title}.txt`;
+
 app.use(express.json()); // decode request body as json
 
 // GET ALL POSTS
@@ -26,7 +28,8 @@ app.get("/blogs", (req, res) => {
 // CREATE A NEW POST
 app.post("/blogs", (req, res) => {
   const { title, content } = req.body;
-  const path = `./blogs/${title}.txt`;
+  const path = genPath(title);
+
   if (fs.existsSync(path)) {
     const err = new Error("File already exists");
     err.statusCode = 400;
@@ -40,7 +43,8 @@ app.post("/blogs", (req, res) => {
 app.put("/posts/:title", (req, res) => {
   const title = req.params.title;
   const { content } = req.body;
-  const path = `./blogs/${title}.txt`;
+  const path = genPath(title);
+
   if (!fs.existsSync(path)) {
     const err = new Error("This post does not exist!");
     err.statusCode = 400;
@@ -54,7 +58,7 @@ app.put("/posts/:title", (req, res) => {
 app.delete("/blogs/:title", (req, res) => {
   // How to get the title from the url parameters?
   const title = req.params.title;
-  const path = `./blogs/${title}.txt`;
+  const path = genPath(title);
 
   if (!fs.existsSync(path)) {
     const err = new Error("This post does not exist!");
@@ -69,7 +73,7 @@ app.delete("/blogs/:title", (req, res) => {
 // GET A POST
 app.get("/blogs/:title", (req, res) => {
   const title = req.params.title;
-  const path = `./blogs/${title}.txt`;
+  const path = genPath(title);
 
   if (!fs.existsSync(path)) {
     const err = new Error("This post does not exist!");
