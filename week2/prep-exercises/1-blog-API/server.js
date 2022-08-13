@@ -5,52 +5,49 @@ const fs = require("fs");
 
 const PORT = process.env.PORT || 3000;
 
+const handleErrors = (err, req, res, next) => {
+  err.statusCode = err.statusCode || 500;
+  err.message = err.message || "Internal server error";
+
+  console.error(err);
+  res.status(err.statusCode).json({ error: err.message });
+};
+
 app.use(express.json()); // decode request body as json
 
 // YOUR CODE GOES IN HERE
-app.get("/", function (req, res) {
-  res.send("Hello World");
-});
 
 app.get("/blogs", (req, res) => {
-  const posts = fs.readdirSync("./blogs").map(file => ({
-    title: file.replace(/.txt$/, "") // remove .txt in the name of the file
+  const posts = fs.readdirSync("./blogs").map((file) => ({
+    title: file.replace(/.txt$/, ""), // remove .txt in the name of the file
   }));
   res.send(posts);
 });
 
 app.post("/blogs", (req, res) => {
-  try {
-    const { title, content } = req.body;
-    const path = `./blogs/${title}.txt`;
-    if (fs.existsSync(path))
-      return res.status(400).send({
-        status: 400,
-        error: "File already exists",
-      });
-    fs.writeFileSync(path, content);
-    res.send({
-      status: 200,
-      message: "Blog post saved",
-    });
-  } catch (error) {
-    console.error(error);
-    res.send({
-      status: 500,
-      error: "Internal server error",
-    });
+  const { title, content } = req.body;
+  const path = `./blogs/${title}.txt`;
+  if (fs.existsSync(path)) {
+    const err = new Error("File already exists");
+    err.statusCode = 400;
+    throw err;
   }
+  fs.writeFileSync(path, content);
+  res.send({
+    status: 200,
+    message: "Blog post saved",
+  });
 });
 
 app.put("/posts/:title", (req, res) => {
   const title = req.params.title;
   const { content } = req.body;
   const path = `./blogs/${title}.txt`;
-  if (!fs.existsSync(path))
-    return res.status(400).send({
-      status: 400,
-      error: "This post does not exist!",
-    });
+  if (!fs.existsSync(path)) {
+    const err = new Error("This post does not exist!");
+    err.statusCode = 400;
+    throw err;
+  }
   fs.writeFileSync(path, content);
   res.end("ok");
 });
@@ -60,11 +57,11 @@ app.delete("/blogs/:title", (req, res) => {
   const title = req.params.title;
   const path = `./blogs/${title}.txt`;
 
-  if (!fs.existsSync(path))
-    return res.status(400).send({
-      status: 400,
-      error: "This post does not exist!",
-    });
+  if (!fs.existsSync(path)) {
+    const err = new Error("This post does not exist!");
+    err.statusCode = 400;
+    throw err;
+  }
 
   fs.unlinkSync(path);
   res.end("ok");
@@ -74,15 +71,17 @@ app.get("/blogs/:title", (req, res) => {
   const title = req.params.title;
   const path = `./blogs/${title}.txt`;
 
-  if (!fs.existsSync(path))
-    return res.status(400).send({
-      status: 400,
-      error: "This post does not exist!",
-    });
+  if (!fs.existsSync(path)) {
+    const err = new Error("This post does not exist!");
+    err.statusCode = 400;
+    throw err;
+  }
 
   const content = fs.readFileSync(path);
   res.send(content);
 });
+
+app.use(handleErrors);
 
 app.listen(PORT, () => {
   console.log("Server is running on port " + PORT);
