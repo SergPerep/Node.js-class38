@@ -15,8 +15,7 @@ const handleErrors = (err, req, res, next) => {
 
 app.use(express.json()); // decode request body as json
 
-// YOUR CODE GOES IN HERE
-
+// GET ALL POSTS
 app.get("/blogs", (req, res) => {
   const posts = fs.readdirSync("./blogs").map((file) => ({
     title: file.replace(/.txt$/, ""), // remove .txt in the name of the file
@@ -24,6 +23,7 @@ app.get("/blogs", (req, res) => {
   res.send(posts);
 });
 
+// CREATE A NEW POST
 app.post("/blogs", (req, res) => {
   const { title, content } = req.body;
   const path = `./blogs/${title}.txt`;
@@ -36,6 +36,7 @@ app.post("/blogs", (req, res) => {
   res.send({ message: "Blog post saved" });
 });
 
+// UPDATE A POST
 app.put("/posts/:title", (req, res) => {
   const title = req.params.title;
   const { content } = req.body;
@@ -49,6 +50,7 @@ app.put("/posts/:title", (req, res) => {
   res.end("ok");
 });
 
+// DELETE A POST
 app.delete("/blogs/:title", (req, res) => {
   // How to get the title from the url parameters?
   const title = req.params.title;
@@ -64,6 +66,7 @@ app.delete("/blogs/:title", (req, res) => {
   res.end("ok");
 });
 
+// GET A POST
 app.get("/blogs/:title", (req, res) => {
   const title = req.params.title;
   const path = `./blogs/${title}.txt`;
@@ -78,6 +81,7 @@ app.get("/blogs/:title", (req, res) => {
   res.send(content);
 });
 
+// HANDLE ERRORS
 app.use(handleErrors);
 
 app.listen(PORT, () => {
