@@ -35,7 +35,7 @@ app.post("/blogs", (req, res) => {
   if (fs.existsSync(path)) throw new BadRequestError("File already exists");
 
   fs.writeFileSync(path, content);
-  res.send({ message: "Blog post saved" });
+  res.status(201).send({ message: "Blog post saved" });
 });
 
 // UPDATE A POST
