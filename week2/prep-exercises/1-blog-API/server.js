@@ -10,6 +10,15 @@ const genPath = (title) => `./blogs/${title}.txt`;
 
 app.use(express.json()); // decode request body as json
 
+// REQUEST LOGGER MIDDLEWARE
+const logRequest = (req, res, next) => {
+  console.log(`-- ${req.method} ${req.path}`);
+  next();
+};
+
+// LOG REQUESTS
+app.use(logRequest);
+
 // GET ALL POSTS
 app.get("/blogs", (req, res) => {
   const posts = fs.readdirSync("./blogs").map((file) => ({
