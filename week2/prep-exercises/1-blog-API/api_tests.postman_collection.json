@@ -1,0 +1,889 @@
+{
+	"info": {
+		"_postman_id": "94678ef6-2f3e-4857-9b27-72915914f032",
+		"name": "api_tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17034289"
+	},
+	"item": [
+		{
+			"name": "Create a post",
+			"item": [
+				{
+					"name": "Create a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Blog post saved\", () => {",
+									"    const { message } = pm.response.json();",
+									"    pm.expect(message).to.eql(\"Blog post saved\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Snakes\",\n    \"content\": \"They will eat your dreams\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/blogs",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Try to create a post with the same name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Blog post saved\", () => {",
+									"    const { error } = pm.response.json();",
+									"    pm.expect(error).to.eql(\"File already exists\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Snakes\",\n    \"content\": \"{{$randomBs}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/blogs",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a post: check whether content changed Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Content was not changed\", () => {",
+									"    const text = pm.response.text();",
+									"    pm.expect(text).to.eql(\"They will eat your dreams\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/blogs/:title",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs",
+								":title"
+							],
+							"variable": [
+								{
+									"key": "title",
+									"value": "Snakes"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Deleted\", () => {",
+									"    const message = pm.response.text();",
+									"    pm.expect(message).to.eql(\"ok\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/blogs/:title",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs",
+								":title"
+							],
+							"variable": [
+								{
+									"key": "title",
+									"value": "Snakes"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update a post",
+			"item": [
+				{
+					"name": "Create a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Post created\", () => {",
+									"    const { message } = pm.response.json();",
+									"    pm.expect(message).to.eql(\"Blog post saved\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Snakes\",\n    \"content\": \"They will eat your dreams\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/blogs",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Post updated\", () => {",
+									"    const text = pm.response.text();",
+									"    pm.expect(text).to.eql(\"ok\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Hunger demands the best but doesn't lead to satisfaction\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/posts/:title",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"posts",
+								":title"
+							],
+							"variable": [
+								{
+									"key": "title",
+									"value": "Snakes"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Content was not changed\", () => {",
+									"    const text = pm.response.text();",
+									"    pm.expect(text).to.eql(\"Hunger demands the best but doesn't lead to satisfaction\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/blogs/:title",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs",
+								":title"
+							],
+							"variable": [
+								{
+									"key": "title",
+									"value": "Snakes"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Try to update wrong post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"This file does\", () => {",
+									"    const { error } = pm.response.json();",
+									"    pm.expect(error).to.eql(\"This post does not exist!\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Updates?\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/posts/:title",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"posts",
+								":title"
+							],
+							"variable": [
+								{
+									"key": "title",
+									"value": "{{$randomFileName}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Deleted\", () => {",
+									"    const message = pm.response.text();",
+									"    pm.expect(message).to.eql(\"ok\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/blogs/:title",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs",
+								":title"
+							],
+							"variable": [
+								{
+									"key": "title",
+									"value": "Snakes"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete post",
+			"item": [
+				{
+					"name": "Create a new post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Post created\", () => {",
+									"    const { message } = pm.response.json();",
+									"    pm.expect(message).to.eql(\"Blog post saved\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Snakes\",\n    \"content\": \"They will eat your dreams\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/blogs",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete wrong post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"This post does not exist!\", () => {",
+									"    const { error } = pm.response.json();",
+									"    pm.expect(error).to.eql(\"This post does not exist!\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/blogs/:title",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs",
+								":title"
+							],
+							"variable": [
+								{
+									"key": "title",
+									"value": "{{$randomFileName}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Deleted\", () => {",
+									"    const message = pm.response.text();",
+									"    pm.expect(message).to.eql(\"ok\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/blogs/:title",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs",
+								":title"
+							],
+							"variable": [
+								{
+									"key": "title",
+									"value": "Snakes"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get a post",
+			"item": [
+				{
+					"name": "Create a new post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Post created\", () => {",
+									"    const { message } = pm.response.json();",
+									"    pm.expect(message).to.eql(\"Blog post saved\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Snakes\",\n    \"content\": \"They will eat your dreams\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/blogs",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Content is correct\", () => {",
+									"    const text = pm.response.text();",
+									"    pm.expect(text).to.eql(\"They will eat your dreams\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/blogs/:title",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs",
+								":title"
+							],
+							"variable": [
+								{
+									"key": "title",
+									"value": "Snakes"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Try to get nonexisting post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"This post does not exist!\", () => {",
+									"    const { error } = pm.response.json();",
+									"    pm.expect(error).to.eql(\"This post does not exist!\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/blogs/:title",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs",
+								":title"
+							],
+							"variable": [
+								{
+									"key": "title",
+									"value": "{{$randomFileName}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Deleted\", () => {",
+									"    const message = pm.response.text();",
+									"    pm.expect(message).to.eql(\"ok\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/blogs/:title",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs",
+								":title"
+							],
+							"variable": [
+								{
+									"key": "title",
+									"value": "Snakes"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get all posts",
+			"item": [
+				{
+					"name": "Create a new post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Post created\", () => {",
+									"    const { message } = pm.response.json();",
+									"    pm.expect(message).to.eql(\"Blog post saved\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Snakes\",\n    \"content\": \"They will eat your dreams\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/blogs",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all posts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const posts = pm.response.json();",
+									"",
+									"pm.test(\"Array posts\", () => {",
+									"    pm.expect(posts).to.be.an(\"Array\");",
+									"})",
+									"",
+									"pm.test(\"Posts have title\", () => {",
+									"    posts.forEach(post => {",
+									"        pm.expect(post).to.have.key(\"title\");",
+									"    }) ",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/blogs",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Deleted\", () => {",
+									"    const message = pm.response.text();",
+									"    pm.expect(message).to.eql(\"ok\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/blogs/:title",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"blogs",
+								":title"
+							],
+							"variable": [
+								{
+									"key": "title",
+									"value": "Snakes"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "uri",
+			"value": "http://localhost:3000"
+		}
+	]
+}
