@@ -2,20 +2,9 @@ import express from "express";
 import fs from "fs";
 const app = express();
 import { BadRequestError } from "./appErrors.js";
+import handleErrors from "./handleErrors.js";
 
 const PORT = process.env.PORT || 3000;
-
-// ERROR HANDLER MIDDLEWARE
-const handleErrors = (err, req, res, next) => {
-  if (err instanceof BadRequestError) {
-    console.error(`${err.name}: ${err.message}`); // for developer
-    res.status(err.statusCode).send({ error: err.message }); // for user
-  }
-  if (err.statusCode === 500) {
-    console.error(err);
-    res.status(err.statusCode).json({ error: err.message });
-  }
-};
 
 const genPath = (title) => `./blogs/${title}.txt`;
 
