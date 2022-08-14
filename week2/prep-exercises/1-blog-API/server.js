@@ -4,15 +4,34 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-const handleErrors = (err, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.message = err.message || "Internal server error";
+// APP ERROR CLASS
+class AppError extends Error {
+  constructor(message = "Internal server error", statusCode = 500) {
+    super(message); 
+    this.statusCode = statusCode;
+  }
+}
 
-  console.error(err);
-  res.status(err.statusCode).json({ error: err.message });
+class BadRequestError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 400;
+  }
+}
+
+// ERROR HANDLER MIDDLEWARE
+const handleErrors = (err, req, res, next) => {
+  if (err instanceof BadRequestError) {
+    console.error(`${err.name}: ${err.message}`); // for developer
+    res.status(err.statusCode).send({ error: err.message }); // for user
+  }
+  if (err.statusCode === 500) {
+    console.error(err);
+    res.status(err.statusCode).json({ error: err.message });
+  }
 };
 
-const genPath = title => `./blogs/${title}.txt`;
+const genPath = (title) => `./blogs/${title}.txt`;
 
 app.use(express.json()); // decode request body as json
 
@@ -29,11 +48,8 @@ app.post("/blogs", (req, res) => {
   const { title, content } = req.body;
   const path = genPath(title);
 
-  if (fs.existsSync(path)) {
-    const err = new Error("File already exists");
-    err.statusCode = 400;
-    throw err;
-  }
+  if (fs.existsSync(path)) throw new BadRequestError("File already exists");
+
   fs.writeFileSync(path, content);
   res.send({ message: "Blog post saved" });
 });
@@ -44,11 +60,9 @@ app.put("/posts/:title", (req, res) => {
   const { content } = req.body;
   const path = genPath(title);
 
-  if (!fs.existsSync(path)) {
-    const err = new Error("This post does not exist!");
-    err.statusCode = 400;
-    throw err;
-  }
+  if (!fs.existsSync(path))
+    throw new BadRequestError("This post does not exist!");
+
   fs.writeFileSync(path, content);
   res.end("ok");
 });
@@ -59,11 +73,8 @@ app.delete("/blogs/:title", (req, res) => {
   const title = req.params.title;
   const path = genPath(title);
 
-  if (!fs.existsSync(path)) {
-    const err = new Error("This post does not exist!");
-    err.statusCode = 400;
-    throw err;
-  }
+  if (!fs.existsSync(path))
+    throw new BadRequestError("This post does not exist!");
 
   fs.unlinkSync(path);
   res.end("ok");
@@ -74,11 +85,8 @@ app.get("/blogs/:title", (req, res) => {
   const title = req.params.title;
   const path = genPath(title);
 
-  if (!fs.existsSync(path)) {
-    const err = new Error("This post does not exist!");
-    err.statusCode = 400;
-    throw err;
-  }
+  if (!fs.existsSync(path))
+    throw new BadRequestError("This post does not exist!");
 
   const content = fs.readFileSync(path);
   res.send(content);
