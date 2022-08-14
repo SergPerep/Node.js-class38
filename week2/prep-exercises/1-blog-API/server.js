@@ -1,23 +1,9 @@
 import express from "express";
 import fs from "fs";
 const app = express();
+import { BadRequestError } from "./appErrors.js";
 
 const PORT = process.env.PORT || 3000;
-
-// APP ERROR CLASS
-class AppError extends Error {
-  constructor(message = "Internal server error", statusCode = 500) {
-    super(message); 
-    this.statusCode = statusCode;
-  }
-}
-
-class BadRequestError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 400;
-  }
-}
 
 // ERROR HANDLER MIDDLEWARE
 const handleErrors = (err, req, res, next) => {
