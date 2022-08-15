@@ -1,5 +1,7 @@
 import express from "express";
 const app = express();
+import handleErrors from "./handleErrors.js";
+import { AppError } from "./AppErrors.js";
 
 const PORT = process.env.PORT || 3000;
 
@@ -28,6 +30,12 @@ app.post("/weather", (req, res) => {
     console.error(error);
   }
 });
+
+
+app.use("*", (req, res) => {
+  throw new AppError(`Cannot ${req.method} ${req.originalUrl}`, 404);
+})
+app.use(handleErrors);
 
 app.listen(PORT, () => {
   console.log(`-> Server is running on port ${PORT}`);
