@@ -15,3 +15,12 @@ export class NotFoundError extends AppError {
     this.statusCode = 404;
   }
 }
+
+export class MissingCredError extends AppError{
+  constructor(varName) {
+    super();
+    this.name = "MissingCredError";
+    this.message = "Missing credentials: " + varName;
+    this.statusCode = 400;
+  }
+}
